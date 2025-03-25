@@ -1,0 +1,351 @@
+﻿<Window x:Class="Yaskawa_Test.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Yaskawa_Test"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="HorizontalSwitchStyle" TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid Width="40" Height="25">
+                            <!-- Background -->
+                            <Border x:Name="SwitchBackground" Width="40" Height="25"
+                        CornerRadius="12" Background="#E5E5E5"/>
+
+                            <!-- Knob -->
+                            <Border x:Name="SwitchKnob" Width="20" Height="20"
+                        CornerRadius="10" Background="White"
+                        VerticalAlignment="Center" HorizontalAlignment="Left"
+                        Margin="2,0,0,0">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#888" BlurRadius="3" ShadowDepth="1.5"/>
+                                </Border.Effect>
+                            </Border>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="SwitchBackground" Property="Background" Value="#4CD964"/>
+                                <Setter TargetName="SwitchKnob" Property="HorizontalAlignment" Value="Right"/>
+                                <Setter TargetName="SwitchKnob" Property="Margin" Value="0,0,2,0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--<Style x:Key="CustomSliderStyle" TargetType="Slider">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid>
+                            --><!-- Background Track --><!--
+                            <Border x:Name="TrackBackground" Height="6" CornerRadius="3" Background="#E5E5E5" VerticalAlignment="Center"/>
+
+                            --><!-- Active Track --><!--
+                            <Border x:Name="ActiveTrack" Height="6" CornerRadius="3" Background="#4CD964" VerticalAlignment="Center" Width="0"/>
+
+                            --><!-- Slider Thumb --><!--
+                            <Thumb x:Name="Thumb" Width="20" Height="20" Background="White" CornerRadius="10" 
+                           VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                <Thumb.RenderTransform>
+                                    <TranslateTransform X="0"/>
+                                </Thumb.RenderTransform>
+                                <Thumb.Effect>
+                                    <DropShadowEffect Color="#888" BlurRadius="3" ShadowDepth="1.5"/>
+                                </Thumb.Effect>
+                            </Thumb>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Value" SourceName="Thumb">
+                                <Setter TargetName="ActiveTrack" Property="Width" 
+                                Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Value, Converter={StaticResource SliderValueToWidthConverter}}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>-->
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="12"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="{Binding ConnectButtonContext}" Command="{Binding ConnectButtonClick}"/>
+                <TextBox Grid.Column="1" Text="{Binding IPTextBox}" />
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Border BorderBrush="Black" BorderThickness="1" MaxHeight="120" VerticalAlignment="Top">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border BorderThickness="1" BorderBrush="Black" Margin="-6,-6,-6,-0" Background="DarkSlateBlue">
+                            <Grid>
+                                <TextBlock Text="Joint" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                            </Grid>
+                        </Border>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="J1"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosJ.X}"/>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="J2"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosJ.Y}"/>
+                        </Grid>
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="J3"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosJ.Z}"/>
+                        </Grid>
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="J4"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosJ.RX}"/>
+                        </Grid>
+                        <Grid Grid.Row="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="J5"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosJ.RY}"/>
+                        </Grid>
+                        <Grid Grid.Row="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="J6"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosJ.RZ}"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1" MaxHeight="120" VerticalAlignment="Top">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border BorderThickness="1" BorderBrush="Black" Margin="-6,-6,-6,-0" Background="DarkCyan">
+                            <Grid>
+                                <TextBlock Text="World" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                            </Grid>
+                        </Border>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="X"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosW.X}"/>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Y"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosW.Y}"/>
+                        </Grid>
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Z"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosW.Z}"/>
+                        </Grid>
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="A"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosW.RX}"/>
+                        </Grid>
+                        <Grid Grid.Row="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="B"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosW.RY}"/>
+                        </Grid>
+                        <Grid Grid.Row="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="C"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosW.RZ}"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="4" BorderBrush="Black" BorderThickness="1" MaxHeight="120" VerticalAlignment="Top">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border BorderThickness="1" BorderBrush="Black" Margin="-6,-6,-6,-0" Background="DarkOliveGreen">
+                            <Grid>
+                                <TextBlock Text="User" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                            </Grid>
+                        </Border>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="X"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosU.X}"/>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Y"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosU.Y}"/>
+                        </Grid>
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Z"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosU.Z}"/>
+                        </Grid>
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="A"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosU.RX}"/>
+                        </Grid>
+                        <Grid Grid.Row="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="B"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosU.RY}"/>
+                        </Grid>
+                        <Grid Grid.Row="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="C"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PosU.RZ}"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+                
+            </Grid>
+            <Grid Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Content="{Binding OperationStatus}"/>
+                <Label Grid.Row="1" Content="{Binding ActiveTask}"/>
+            </Grid>
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Override:" HorizontalAlignment="Right"/>
+                <Slider Grid.Column="1" x:Name="OverrideSlider" Value="{Binding Override, UpdateSourceTrigger=PropertyChanged}" Maximum="100" Margin="5" MaxWidth="300"/>
+            </Grid>
+            <Grid Grid.Row="5">
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+                    <!-- Play Button -->
+                    <Button Padding="10" Margin="5" Background="Transparent" ToolTip="Play"  Command="{Binding Start}">
+                        <materialDesign:PackIcon Kind="PlayCircle" Width="40" Height="40" Foreground="Green"/>
+                    </Button>
+
+                    <!-- Pause Button -->
+                    <Button Padding="10" Margin="5" Background="Transparent" ToolTip="Pause" Command="{Binding Stop}">
+                        <materialDesign:PackIcon Kind="PauseCircle" Width="40" Height="40" Foreground="Orange"/>
+                    </Button>
+
+                    <!-- Stop Button -->
+                    <Button Padding="10" Margin="5" Background="Transparent" ToolTip="Stop" Command="{Binding Abort}">
+                        <materialDesign:PackIcon Kind="StopCircle" Width="40" Height="40" Foreground="Red"/>
+                    </Button>
+
+                    <!-- Reset Button -->
+                    <Button Padding="10" Margin="5" Background="Transparent" ToolTip="Reset" Command="{Binding Reset}">
+                        <materialDesign:PackIcon Kind="RefreshCircle" Width="40" Height="40" Foreground="DodgerBlue"/>
+                    </Button>
+
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="1">
+        </Grid>
+    </Grid>
+</Window>
