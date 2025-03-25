@@ -1,4 +1,6 @@
 ﻿
+using PropertyChanged;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Windows.Input;
@@ -22,6 +24,32 @@ namespace Yaskawa_Test
             DataCheck.RunWorkerCompleted += DataCheck_RunWorkerCompleted;
             mainWindow.OverrideSlider.PreviewMouseDown += OverrideSlider_MouseDown;
             mainWindow.OverrideSlider.PreviewMouseUp += OverrideSlider_MouseUp;
+            RobotPositionVariableData robotPosition = new RobotPositionVariableData();
+            PositionData positionData = new PositionData();
+            positionData.AxisData.SetValue(1.025, 0);
+            positionData.AxisData.SetValue(-22.04, 1);
+            positionData.AxisData.SetValue(12.123, 2);
+            positionData.AxisData.SetValue(-32.333, 3);
+            positionData.AxisData.SetValue(132.22, 4);
+            positionData.AxisData.SetValue(-12.120, 5);
+            positionData.CoordinateType = CoordinateType.UserCoordinate;
+            positionData.ToolNumber = 1;
+            positionData.UserCoordinateNumber = 1;
+            Figure figure = new Figure();
+            figure.FlipOrNoFlip = FlipOrNoFlip.Flip;
+            figure.FrontOrBack = FrontOrBack.Back;
+            figure.UpperOrLower = UpperOrLower.Lower;
+            figure.AxisAngles.SetValue(AxisAngle.GreaterThanOrEqual180, 0);
+            figure.AxisAngles.SetValue(AxisAngle.LessThan180, 1);
+            figure.AxisAngles.SetValue(AxisAngle.GreaterThanOrEqual180, 2);
+            figure.AxisAngles.SetValue(AxisAngle.LessThan180, 3);
+            figure.AxisAngles.SetValue(AxisAngle.GreaterThanOrEqual180, 4);
+            figure.AxisAngles.SetValue(AxisAngle.LessThan180, 5);
+            positionData.Figure = figure;
+            robotPosition.PositionData = positionData;
+            RegItem gsg= new RegItem();
+            gsg.RobotPosition = robotPosition;
+            var stt=robotPosition.ToString();
         }
         bool overrideHold = false;
         private void OverrideSlider_MouseUp(object sender, MouseButtonEventArgs e)
@@ -88,16 +116,154 @@ namespace Yaskawa_Test
             }
             if (!overrideHold)
                 Override = yaskawa_interface.GetOverride();
+            try
+            {
+                var alarms = yaskawa_interface.GetActiveAlarms();
+                if (alarms.HasValue)
+                {
+                    ActiveAlarms = new ObservableCollection<AlarmData>(alarms.Value.Alarms.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                AlarmData alarm = new AlarmData();
+                alarm.Name = ex.Message;
+                ActiveAlarms = new ObservableCollection<AlarmData>();
+                ActiveAlarms.Add(alarm);
+            }
+
+            if (SetNumValuesEnabled)
+            {
+                yaskawa_interface.SetRegisterInt(ushort.Parse(RegNum1.Num), int.Parse(RegNum1.Val));
+                yaskawa_interface.SetRegisterInt(ushort.Parse(RegNum2.Num), int.Parse(RegNum2.Val));
+            }
+            else
+            {
+                RegNum1.Val = yaskawa_interface.GetRegisterInt(ushort.Parse(RegNum1.Num)).ToString();
+                RegNum2.Val = yaskawa_interface.GetRegisterInt(ushort.Parse(RegNum2.Num)).ToString();
+            }
+
+            if (SetRealValuesEnabled)
+            {
+                yaskawa_interface.SetRegisterInt(ushort.Parse(RegReal1.Num), int.Parse(RegReal1.Val));
+                yaskawa_interface.SetRegisterInt(ushort.Parse(RegReal2.Num), int.Parse(RegReal2.Val));
+            }
+            else
+            {
+                RegReal1.Val = yaskawa_interface.GetRegisterInt(ushort.Parse(RegReal1.Num)).ToString();
+                RegReal2.Val = yaskawa_interface.GetRegisterInt(ushort.Parse(RegReal2.Num)).ToString();
+            }
+            if (SetPRValuesEnabled)
+            {
+                yaskawa_interface.SetPR(PosReg1.RobotPosition);
+                yaskawa_interface.SetPR(PosReg2.RobotPosition);
+            }
+            else
+            {
+                if (yaskawa_interface.GetPR(ushort.Parse(PosReg1.Num)).HasValue)
+                {
+                    PosReg1.RobotPosition = yaskawa_interface.GetPR(ushort.Parse(PosReg1.Num)).Value;
+                }
+                if (yaskawa_interface.GetPR(ushort.Parse(PosReg2.Num)).HasValue)
+                {
+                    PosReg2.RobotPosition = yaskawa_interface.GetPR(ushort.Parse(PosReg2.Num)).Value;
+                }
+            }
         }
         public int Override { get; set; }
         public string ConnectButtonContext { get; set; } = "Connect";
         public string IPTextBox { get; set; } = "10.0.0.2";
         public string OperationStatus { get; set; } = "No Connection";
         public string ActiveTask { get; set; } = "No Connection";
+        public ObservableCollection<AlarmData> ActiveAlarms { get; set; }
+
+        public string RegNumSetButtonName { get; set; } = "SET";
+        public bool SetNumValuesEnabled { get; private set; }
+        public bool SetNumNamesEnabled { get; private set; }
+        public string RegRealSetButtonName { get; set; } = "SET";
+        public bool SetRealValuesEnabled { get; private set; }
+        public bool SetRealNamesEnabled { get; private set; }
+
+
+        public string PosRegSetButtonName { get; set; } = "SET";
+        public bool SetPRValuesEnabled { get; private set; }
+        public bool SetPRNamesEnabled { get; private set; }
+
+        public RegItem RegNum1 { get; set; }
+        public RegItem RegNum2 { get; set; }
+        public RegItem RegReal1 { get; set; }
+        public RegItem RegReal2 { get; set; }
+
+        public RegItem PosReg1 { get; set; }
+        public RegItem PosReg2 { get; set; }
 
         public Pos PosJ { get; set; } = new Pos();
         public Pos PosW { get; set; } = new Pos();
         public Pos PosU { get; set; } = new Pos();
+
+        public ICommand RegNumSetButton
+        {
+            get
+            {
+                return new RelayCommand(o =>
+                {
+                    if (RegNumSetButtonName == "SET")
+                    {
+                        RegNumSetButtonName = "GET";
+                        SetNumValuesEnabled = true;
+                        SetNumNamesEnabled = false;
+                    }
+                    else
+                    {
+                        RegNumSetButtonName = "SET";
+                        SetNumValuesEnabled = false;
+                        SetNumNamesEnabled = true;
+                    }
+                }, o => true);
+            }
+        }
+        public ICommand RegRealSetButton
+        {
+            get
+            {
+                return new RelayCommand(o =>
+                {
+                    if (RegRealSetButtonName == "SET")
+                    {
+                        RegRealSetButtonName = "GET";
+                        SetRealValuesEnabled = true;
+                        SetRealNamesEnabled = false;
+                    }
+                    else
+                    {
+                        RegRealSetButtonName = "SET";
+                        SetRealValuesEnabled = false;
+                        SetRealNamesEnabled = true;
+                    }
+                }, o => true);
+            }
+        }
+        public ICommand PosRegSetButton
+        {
+            get
+            {
+                return new RelayCommand(o =>
+                {
+                    if (PosRegSetButtonName == "SET")
+                    {
+                        PosRegSetButtonName = "GET";
+                        SetPRValuesEnabled = true;
+                        SetPRNamesEnabled = false;
+                    }
+                    else
+                    {
+                        PosRegSetButtonName = "SET";
+                        SetPRValuesEnabled = false;
+                        SetPRNamesEnabled = true;
+                    }
+                }, o => true);
+            }
+        }
         public ICommand ConnectButtonClick
         {
             get
@@ -111,6 +277,12 @@ namespace Yaskawa_Test
                         {
                             DataCheck.RunWorkerAsync();
                             ConnectButtonContext = "DisConnect";
+                            RegNum1 = new RegItem();
+                            RegNum2 = new RegItem();
+                            RegReal1 = new RegItem();
+                            RegReal2 = new RegItem();
+                            PosReg1 = new RegItem();
+                            PosReg2 = new RegItem();
                         }
                     }
                     else
@@ -175,5 +347,29 @@ namespace Yaskawa_Test
         public double RY { get; set; }
         public double RZ { get; set; }
 
+    }
+    [AddINotifyPropertyChangedInterface] // Fody automatically implements INotifyPropertyChanged
+    public class RegItem
+    {
+        public string Num { get; set; }
+        public string Val { get; set; }
+        public bool IsON { get; set; }
+        private RobotPositionVariableData _robotPosition;
+        public RobotPositionVariableData RobotPosition
+        {
+            get
+            {
+                return ValToPos();
+            }
+            set
+            {
+                this.Val = value.ToString();
+            }
+        }
+        private RobotPositionVariableData ValToPos()
+        {
+            RobotPositionVariableData robotPosition = new RobotPositionVariableData();
+            return robotPosition;
+        }
     }
 }

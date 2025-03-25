@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Automation;
 using YMConnect;
 namespace Yaskawa_Test
 {
@@ -22,7 +23,7 @@ namespace Yaskawa_Test
         }
         public void DisConnect()
         {
-            if(c != null)
+            if (c != null)
             {
                 try
                 {
@@ -162,12 +163,23 @@ namespace Yaskawa_Test
 
         internal void SetOverride(int @override)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         internal int GetOverride()
         {
-            throw new NotImplementedException();
+            var jd = new JobData();
+            var status2 = c.Job.GetExecutingJobInformation(InformTaskNumber.Master, out jd);
+            return (int)jd.SpeedOverride;
+        }
+        internal ActiveAlarms? GetActiveAlarms()
+        {
+            ActiveAlarms activeAlarms = new ActiveAlarms();
+            var status = c.Faults.GetActiveAlarms(out activeAlarms);
+            if (status != null && status.StatusCode == SUCCESS)
+                return activeAlarms;
+            else
+                return null;
         }
     }
 }

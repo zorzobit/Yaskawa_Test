@@ -301,15 +301,23 @@
                         </Grid>
                     </Grid>
                 </Border>
-                
             </Grid>
             <Grid Grid.Row="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Label Content="{Binding OperationStatus}"/>
-                <Label Grid.Row="1" Content="{Binding ActiveTask}"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="{Binding OperationStatus}"/>
+                    <Label Grid.Row="1" Content="{Binding ActiveTask}"/>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <ListBox ItemsSource="{Binding ActiveAlarms}" DisplayMemberPath="Name"/>
+                </Grid>
             </Grid>
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
@@ -319,6 +327,7 @@
                 <Label Content="Override:" HorizontalAlignment="Right"/>
                 <Slider Grid.Column="1" x:Name="OverrideSlider" Value="{Binding Override, UpdateSourceTrigger=PropertyChanged}" Maximum="100" Margin="5" MaxWidth="300"/>
             </Grid>
+            
             <Grid Grid.Row="5">
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
@@ -346,6 +355,86 @@
             </Grid>
         </Grid>
         <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="12"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="12"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border BorderBrush="Black" BorderThickness="1">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="RegNum"/>
+                            <Button Content="{Binding RegNumSetButtonName}" Command="{Binding RegNumSetButton}" Width="50" Margin="5,0"/>
+                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding RegNum1.Num, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumNamesEnabled}"/>
+                            <TextBox Grid.Column="1" Text="{Binding RegNum1.Val, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumValuesEnabled}"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding RegNum2.Num, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumNamesEnabled}"/>
+                            <TextBox Grid.Column="1" Text="{Binding RegNum2.Val, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumValuesEnabled}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="RegReal"/>
+                            <Button Content="{Binding RegRealSetButtonName}" Command="{Binding RegRealSetButton}" Width="50" Margin="5,0"/>
+                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding RegReal1.Real, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetRealNamesEnabled}"/>
+                            <TextBox Grid.Column="1" Text="{Binding RegReal1.Val, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetRealValuesEnabled}"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding RegReal2.Real, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetRealNamesEnabled}"/>
+                            <TextBox Grid.Column="1" Text="{Binding RegReal2.Val, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetRealValuesEnabled}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Border BorderBrush="Black" BorderThickness="1">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="PosReg"/>
+                            <Button Content="{Binding PosRegSetButtonName}" Command="{Binding PosRegSetButton}" Width="50" Margin="5,0"/>
+                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding PosReg1.Num, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetPRNamesEnabled}"/>
+                            <TextBox Grid.Column="1" Text="{Binding PosReg1.Val, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumValuesEnabled}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
