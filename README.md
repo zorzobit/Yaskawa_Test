@@ -50,3 +50,49 @@ The following methods can be used to fetch the robot's position in different coo
    var posW = robot.GetPosw(); // World Coordinates
    var posU = robot.GetPosu(); // User Coordinates
 ```
+## Writing and Reading I/O
+You can write a digital value to an I/O point using the WriteIO method:
+```csharp
+   robot.WriteIO(1, 1); // Write value 1 to I/O point 1
+```
+To read integer or float values from the robot's registers, use GetRegisterInt and GetRegisterFloat:
+```csharp
+   var registerInt = robot.GetRegisterInt(10);
+   var registerFloat = robot.GetRegisterFloat(20);
+```
+
+## Job Control
+Control robot jobs (start, hold, reset) using the following methods:
+```csharp
+   robot.Start();      // Start a job
+   robot.FeedHold();   // Feed hold the job
+   robot.Reset();      // Reset the job
+```
+
+## Active Alarms
+To get the active alarms, you can use:
+```csharp
+   var alarms = robot.GetActiveAlarms();
+```
+## Contributing
+Contributions to this project are welcome! Feel free to fork the repository, make changes, and create pull requests.
+
+1. Fork the repository.
+
+2. Create a new branch (git checkout -b feature-branch).
+
+3. Commit your changes (git commit -am 'Add new feature').
+
+4. Push to the branch (git push origin feature-branch).
+   
+5. Create a new Pull Request.
+
+## License
+This project is open-source and available under the MIT License.
+
+## Acknowledgements
+- <a href="https://github.com/Yaskawa-Global/YMConnect" target="_blank">YMConnect</a> library for robot communication.
+
+- <a href="https://www.yaskawa.com" target="_blank">Yaskawa Electric Corporation</a> for their robot controllers.
+
+<i>This ReadMe created with ChatGPT</i>
