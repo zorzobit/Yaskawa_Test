@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Windows.Automation;
 using YMConnect;
 namespace Yaskawa_Test
 {
     internal class Yaskawa_interface
     {
-        MotomanController c;
+        MotomanController controller;
         int SUCCESS = 0;
         public bool IsConnected { get; set; } = false;
         public Yaskawa_interface()
@@ -14,7 +16,7 @@ namespace Yaskawa_Test
         public void Connect(string ip)
         {
             StatusInfo status = new StatusInfo();
-            c = MotomanController.OpenConnection(ip, out status);
+            controller = MotomanController.OpenConnection(ip, out status);
             if (status != null && status.StatusCode == SUCCESS)
                 this.IsConnected = true;
             else
@@ -22,11 +24,11 @@ namespace Yaskawa_Test
         }
         public void DisConnect()
         {
-            if(c != null)
+            if (controller != null)
             {
                 try
                 {
-                    c.CloseConnection();
+                    controller.CloseConnection();
                 }
                 catch (Exception)
                 {
@@ -37,13 +39,13 @@ namespace Yaskawa_Test
         public ControllerStateData GetStateData()
         {
             ControllerStateData controllerStateData = new ControllerStateData();
-            c.Status.ReadState(out controllerStateData);
+            controller.Status.ReadState(out controllerStateData);
             return controllerStateData;
         }
         public PositionData? GetPosj()
         {
             PositionData positionData = new PositionData();
-            var status = c?.ControlGroup?.ReadPositionData(ControlGroupId.R1, CoordinateType.Angle, 0, 0, out positionData);
+            var status = controller?.ControlGroup?.ReadPositionData(ControlGroupId.R1, CoordinateType.BaseCoordinate, 1, 1, out positionData);
             if (status != null && status.StatusCode == SUCCESS)
                 return positionData;
             else
@@ -52,7 +54,7 @@ namespace Yaskawa_Test
         public PositionData? GetPosw()
         {
             PositionData positionData = new PositionData();
-            var status = c?.ControlGroup?.ReadPositionData(ControlGroupId.R1, CoordinateType.RobotCoordinate, 0, 0, out positionData);
+            var status = controller?.ControlGroup?.ReadPositionData(ControlGroupId.R1, CoordinateType.RobotCoordinate, 0, 0, out positionData);
             if (status != null && status.StatusCode == SUCCESS)
                 return positionData;
             else
@@ -61,7 +63,7 @@ namespace Yaskawa_Test
         public PositionData? GetPosu()
         {
             PositionData positionData = new PositionData();
-            var status = c?.ControlGroup?.ReadPositionData(ControlGroupId.R1, CoordinateType.UserCoordinate, 0, 0, out positionData);
+            var status = controller?.ControlGroup?.ReadPositionData(ControlGroupId.R1, CoordinateType.UserCoordinate, 1, 1, out positionData);
             if (status != null && status.StatusCode == SUCCESS)
                 return positionData;
             else
@@ -69,7 +71,7 @@ namespace Yaskawa_Test
         }
         public bool WriteIO(uint num, byte io)
         {
-            var status = c?.IO?.WriteByte(num, io);
+            var status = controller?.IO?.WriteByte(num, io);
             if (status != null && status.StatusCode == SUCCESS)
                 return true;
             else
@@ -78,7 +80,7 @@ namespace Yaskawa_Test
         public int? GetRegisterInt(ushort num)
         {
             IntegerVariableData integerVariableData = new IntegerVariableData();
-            var status = c?.Variables?.IntegerVariable?.Read(num, out integerVariableData);
+            var status = controller?.Variables?.IntegerVariable?.Read(num, out integerVariableData);
             if (status != null && status.StatusCode == SUCCESS)
                 return (int)integerVariableData.Value;
             else
@@ -89,7 +91,7 @@ namespace Yaskawa_Test
             IntegerVariableData integerVariableData = new IntegerVariableData();
             integerVariableData.VariableIndex = num;
             integerVariableData.Value = (short)value;
-            var status = c?.Variables?.IntegerVariable?.Write(integerVariableData);
+            var status = controller?.Variables?.IntegerVariable?.Write(integerVariableData);
             if (status != null && status.StatusCode == SUCCESS)
                 return true;
             else
@@ -98,7 +100,7 @@ namespace Yaskawa_Test
         public float? GetRegisterFloat(ushort num)
         {
             RealVariableData realVariableData = new RealVariableData();
-            var status = c?.Variables?.RealVariable?.Read(num, out realVariableData);
+            var status = controller?.Variables?.RealVariable?.Read(num, out realVariableData);
             if (status != null && status.StatusCode == SUCCESS)
                 return realVariableData.Value;
             else
@@ -109,7 +111,7 @@ namespace Yaskawa_Test
             RealVariableData realVariableData = new RealVariableData();
             realVariableData.VariableIndex = num;
             realVariableData.Value = value;
-            var status = c?.Variables?.RealVariable?.Write(realVariableData);
+            var status = controller?.Variables?.RealVariable?.Write(realVariableData);
             if (status != null && status.StatusCode == SUCCESS)
                 return true;
             else
@@ -119,7 +121,7 @@ namespace Yaskawa_Test
         {
             RobotPositionVariableData robotPositionVariableData = new RobotPositionVariableData();
 
-            var status = c?.Variables?.RobotPositionVariable?.Read(index, out robotPositionVariableData);
+            var status = controller?.Variables?.RobotPositionVariable?.Read(index, out robotPositionVariableData);
             if (status != null && status.StatusCode == SUCCESS)
                 return robotPositionVariableData;
             else
@@ -127,7 +129,7 @@ namespace Yaskawa_Test
         }
         public bool SetPR(RobotPositionVariableData robotPositionVariableData)
         {
-            var status = c?.Variables?.RobotPositionVariable?.Write(robotPositionVariableData);
+            var status = controller?.Variables?.RobotPositionVariable?.Write(robotPositionVariableData);
             if (status != null && status.StatusCode == SUCCESS)
                 return true;
             else
@@ -135,7 +137,7 @@ namespace Yaskawa_Test
         }
         public bool Start()
         {
-            var status = c?.ControlCommands?.StartJob();
+            var status = controller?.ControlCommands?.StartJob();
             if (status != null && status.StatusCode == SUCCESS)
                 return true;
             else
@@ -143,7 +145,17 @@ namespace Yaskawa_Test
         }
         public bool FeedHold()
         {
-            var status = c?.ControlCommands.SetHold(SignalStatus.OFF);
+            var status = controller?.ControlCommands.SetHold(SignalStatus.ON);
+            Thread.Sleep(200);
+            var status2 = controller?.ControlCommands.SetHold(SignalStatus.OFF);
+            if (status != null && status.StatusCode == SUCCESS && status2 != null && status2.StatusCode == SUCCESS)
+                return true;
+            else
+                return false;
+        }
+        public bool Abort()
+        {
+            var status = controller?.Job.SetActiveJob("NEWJOB1",1);
             if (status != null && status.StatusCode == SUCCESS)
                 return true;
             else
@@ -153,7 +165,7 @@ namespace Yaskawa_Test
         {
             //var status = c?.Job.SetActiveJob("Test", 0);
 
-            var status2 = c.ControlCommands.SetServos(SignalStatus.ON);
+            var status2 = controller.ControlCommands.SetServos(SignalStatus.ON);
             if (status2 != null && status2.StatusCode == SUCCESS)
                 return true;
             else
@@ -162,12 +174,23 @@ namespace Yaskawa_Test
 
         internal void SetOverride(int @override)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         internal int GetOverride()
         {
-            throw new NotImplementedException();
+            var jd = new JobData();
+            var status2 = controller.Job.GetExecutingJobInformation(InformTaskNumber.Master, out jd);
+            return (int)jd.SpeedOverride;
+        }
+        internal ActiveAlarms? GetActiveAlarms()
+        {
+            ActiveAlarms activeAlarms = new ActiveAlarms();
+            var status = controller.Faults.GetActiveAlarms(out activeAlarms);
+            if (status != null && status.StatusCode == SUCCESS)
+                return activeAlarms;
+            else
+                return null;
         }
     }
 }
