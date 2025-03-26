@@ -1,6 +1,6 @@
 # Yaskawa Test - Robot Communication Example
 
-- [go](http://stackoverflow.com{:target="_blank"}) 
+
 This project demonstrates how to establish communication with a Yaskawa robot using the `YMConnect` library within a WPF application. The code provides various methods for controlling and monitoring the robot, such as connecting, retrieving positions, controlling I/O, and reading/writing registers.
 
 ## Features
