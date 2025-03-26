@@ -22,3 +22,16 @@ This project demonstrates how to establish communication with a Yaskawa robot us
 1. Clone this repository to your local machine:
    ```bash
    git clone https://github.com/zorzobit/Yaskawa_Test.git
+   Open the project in Visual Studio or your preferred C# IDE.
+
+2. Ensure the YMConnect library is correctly referenced in your project.
+
+3. Build the project to restore any dependencies.
+
+## Usage
+Connecting to the Robot
+To establish a connection to the robot, create an instance of Yaskawa_interface and call the Connect method with the robot's IP address:
+```csharp
+   Yaskawa_interface robot = new Yaskawa_interface();
+   robot.Connect("192.168.0.1");
+
