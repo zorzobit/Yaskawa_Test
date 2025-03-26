@@ -134,24 +134,32 @@ namespace Yaskawa_Test
 
             if (SetNumValuesEnabled)
             {
-                yaskawa_interface.SetRegisterInt(ushort.Parse(RegNum1.Num), int.Parse(RegNum1.Val));
-                yaskawa_interface.SetRegisterInt(ushort.Parse(RegNum2.Num), int.Parse(RegNum2.Val));
+                if(RegNum1.Num!=null&&RegNum1.Val!=null) 
+                    yaskawa_interface.SetRegisterInt(ushort.Parse(RegNum1.Num), int.Parse(RegNum1.Val));
+                if (RegNum2.Num != null && RegNum2.Val != null)
+                    yaskawa_interface.SetRegisterInt(ushort.Parse(RegNum2.Num), int.Parse(RegNum2.Val));
             }
             else
             {
-                RegNum1.Val = yaskawa_interface.GetRegisterInt(ushort.Parse(RegNum1.Num)).ToString();
-                RegNum2.Val = yaskawa_interface.GetRegisterInt(ushort.Parse(RegNum2.Num)).ToString();
+                if (RegNum1.Num != null)
+                    RegNum1.Val = yaskawa_interface.GetRegisterInt(ushort.Parse(RegNum1.Num)).ToString();
+                if (RegNum2.Num != null)
+                    RegNum2.Val = yaskawa_interface.GetRegisterInt(ushort.Parse(RegNum2.Num)).ToString();
             }
 
             if (SetRealValuesEnabled)
             {
-                yaskawa_interface.SetRegisterInt(ushort.Parse(RegReal1.Num), int.Parse(RegReal1.Val));
-                yaskawa_interface.SetRegisterInt(ushort.Parse(RegReal2.Num), int.Parse(RegReal2.Val));
+                if (RegReal1.Num != null && RegReal1.Val != null)
+                    yaskawa_interface.SetRegisterFloat(ushort.Parse(RegReal1.Num), int.Parse(RegReal1.Val));
+                if (RegReal2.Num != null && RegReal2.Val != null)
+                    yaskawa_interface.SetRegisterFloat(ushort.Parse(RegReal2.Num), int.Parse(RegReal2.Val));
             }
             else
             {
-                RegReal1.Val = yaskawa_interface.GetRegisterInt(ushort.Parse(RegReal1.Num)).ToString();
-                RegReal2.Val = yaskawa_interface.GetRegisterInt(ushort.Parse(RegReal2.Num)).ToString();
+                if (RegReal1.Num != null)
+                    RegReal1.Val = yaskawa_interface.GetRegisterFloat(ushort.Parse(RegReal1.Num)).ToString();
+                if (RegReal2.Num != null)
+                    RegReal2.Val = yaskawa_interface.GetRegisterFloat(ushort.Parse(RegReal2.Num)).ToString();
             }
             if (SetPRValuesEnabled)
             {
@@ -160,11 +168,11 @@ namespace Yaskawa_Test
             }
             else
             {
-                if (yaskawa_interface.GetPR(ushort.Parse(PosReg1.Num)).HasValue)
+                if (PosReg1.Num != null && yaskawa_interface.GetPR(ushort.Parse(PosReg1.Num)).HasValue)
                 {
                     PosReg1.RobotPosition = yaskawa_interface.GetPR(ushort.Parse(PosReg1.Num)).Value;
                 }
-                if (yaskawa_interface.GetPR(ushort.Parse(PosReg2.Num)).HasValue)
+                if (PosReg2.Num != null && yaskawa_interface.GetPR(ushort.Parse(PosReg2.Num)).HasValue)
                 {
                     PosReg2.RobotPosition = yaskawa_interface.GetPR(ushort.Parse(PosReg2.Num)).Value;
                 }
@@ -172,27 +180,28 @@ namespace Yaskawa_Test
         }
         public int Override { get; set; }
         public string ConnectButtonContext { get; set; } = "Connect";
-        public string IPTextBox { get; set; } = "10.0.0.2";
+        public string IPTextBox { get; set; } = "192.168.255.1";
         public string OperationStatus { get; set; } = "No Connection";
         public string ActiveTask { get; set; } = "No Connection";
         public ObservableCollection<AlarmData> ActiveAlarms { get; set; }
 
         public string RegNumSetButtonName { get; set; } = "SET";
         public bool SetNumValuesEnabled { get; private set; }
-        public bool SetNumNamesEnabled { get; private set; }
+        public bool SetNumNamesEnabled { get; private set; } = true;
         public string RegRealSetButtonName { get; set; } = "SET";
         public bool SetRealValuesEnabled { get; private set; }
-        public bool SetRealNamesEnabled { get; private set; }
+        public bool SetRealNamesEnabled { get; private set; } = true;
 
 
         public string PosRegSetButtonName { get; set; } = "SET";
         public bool SetPRValuesEnabled { get; private set; }
-        public bool SetPRNamesEnabled { get; private set; }
+        public bool SetPRNamesEnabled { get; private set; } = true;
 
         public RegItem RegNum1 { get; set; }
         public RegItem RegNum2 { get; set; }
         public RegItem RegReal1 { get; set; }
         public RegItem RegReal2 { get; set; }
+        public IntegerVariableData RegNum3 { get; set; }
 
         public RegItem PosReg1 { get; set; }
         public RegItem PosReg2 { get; set; }
@@ -322,7 +331,7 @@ namespace Yaskawa_Test
                 return new RelayCommand(o =>
                 {
                     if (yaskawa_interface.IsConnected)
-                        yaskawa_interface.FeedHold();
+                        yaskawa_interface.Abort();
                 }, o => true);
             }
         }

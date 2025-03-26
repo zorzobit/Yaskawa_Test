@@ -367,6 +367,8 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="12"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Border BorderBrush="Black" BorderThickness="1">
                     <StackPanel>
@@ -390,6 +392,14 @@
                             <TextBox Text="{Binding RegNum2.Num, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumNamesEnabled}"/>
                             <TextBox Grid.Column="1" Text="{Binding RegNum2.Val, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumValuesEnabled}"/>
                         </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding RegNum3.VariableIndex, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumNamesEnabled}"/>
+                            <TextBox Grid.Column="1" Text="{Binding RegNum3.Value, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumValuesEnabled}"/>
+                        </Grid>
                     </StackPanel>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2">
@@ -403,7 +413,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox Text="{Binding RegReal1.Real, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetRealNamesEnabled}"/>
+                            <TextBox Text="{Binding RegReal1.Num, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetRealNamesEnabled}"/>
                             <TextBox Grid.Column="1" Text="{Binding RegReal1.Val, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetRealValuesEnabled}"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -411,7 +421,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox Text="{Binding RegReal2.Real, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetRealNamesEnabled}"/>
+                            <TextBox Text="{Binding RegReal2.Num, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetRealNamesEnabled}"/>
                             <TextBox Grid.Column="1" Text="{Binding RegReal2.Val, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetRealValuesEnabled}"/>
                         </Grid>
                     </StackPanel>

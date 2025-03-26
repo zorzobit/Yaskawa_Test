@@ -44,7 +44,7 @@ namespace Yaskawa_Test
         public PositionData? GetPosj()
         {
             PositionData positionData = new PositionData();
-            var status = c?.ControlGroup?.ReadPositionData(ControlGroupId.R1, CoordinateType.Angle, 0, 0, out positionData);
+            var status = c?.ControlGroup?.ReadPositionData(ControlGroupId.R1, CoordinateType.BaseCoordinate, 1, 1, out positionData);
             if (status != null && status.StatusCode == SUCCESS)
                 return positionData;
             else
@@ -62,7 +62,7 @@ namespace Yaskawa_Test
         public PositionData? GetPosu()
         {
             PositionData positionData = new PositionData();
-            var status = c?.ControlGroup?.ReadPositionData(ControlGroupId.R1, CoordinateType.UserCoordinate, 0, 0, out positionData);
+            var status = c?.ControlGroup?.ReadPositionData(ControlGroupId.R1, CoordinateType.UserCoordinate, 1, 1, out positionData);
             if (status != null && status.StatusCode == SUCCESS)
                 return positionData;
             else
@@ -144,7 +144,17 @@ namespace Yaskawa_Test
         }
         public bool FeedHold()
         {
-            var status = c?.ControlCommands.SetHold(SignalStatus.OFF);
+            var status = c?.ControlCommands.SetHold(SignalStatus.ON);
+            Thread.Sleep(200);
+            var status2 = c?.ControlCommands.SetHold(SignalStatus.OFF);
+            if (status != null && status.StatusCode == SUCCESS && status2 != null && status2.StatusCode == SUCCESS)
+                return true;
+            else
+                return false;
+        }
+        public bool Abort()
+        {
+            var status = c?.Job.SetActiveJob("NEWJOB1",1);
             if (status != null && status.StatusCode == SUCCESS)
                 return true;
             else
