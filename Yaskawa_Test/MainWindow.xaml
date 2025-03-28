@@ -93,7 +93,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button Content="{Binding ConnectButtonContext}" Command="{Binding ConnectButtonClick}"/>
-                <TextBox Grid.Column="1" Text="{Binding IPTextBox}" />
+                <TextBox Grid.Column="1" Text="{Binding IPTextBox}" Background="{Binding BackgroundBrush}" />
             </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
@@ -325,7 +325,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Override:" HorizontalAlignment="Right"/>
-                <Slider Grid.Column="1" x:Name="OverrideSlider" Value="{Binding Override, UpdateSourceTrigger=PropertyChanged}" Maximum="100" Margin="5" MaxWidth="300"/>
+                <Slider Grid.Column="1" x:Name="OverrideSlider" Value="{Binding Override, UpdateSourceTrigger=PropertyChanged}" Maximum="255" Margin="5" MaxWidth="300"/>
             </Grid>
             
             <Grid Grid.Row="5">
@@ -358,9 +358,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="12"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="12"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -391,14 +389,6 @@
                             </Grid.ColumnDefinitions>
                             <TextBox Text="{Binding RegNum2.Num, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumNamesEnabled}"/>
                             <TextBox Grid.Column="1" Text="{Binding RegNum2.Val, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumValuesEnabled}"/>
-                        </Grid>
-                        <Grid Grid.Row="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBox Text="{Binding RegNum3.VariableIndex, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumNamesEnabled}"/>
-                            <TextBox Grid.Column="1" Text="{Binding RegNum3.Value, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetNumValuesEnabled}"/>
                         </Grid>
                     </StackPanel>
                 </Border>

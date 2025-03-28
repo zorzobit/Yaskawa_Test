@@ -1,7 +1,11 @@
-﻿using System;
+﻿using Mono.Cecil.Cil;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Automation;
+using System.Windows.Controls;
 using YMConnect;
+using YMConnect.Interop;
 namespace Yaskawa_Test
 {
     internal class Yaskawa_interface
@@ -17,6 +21,8 @@ namespace Yaskawa_Test
         {
             StatusInfo status = new StatusInfo();
             controller = MotomanController.OpenConnection(ip, out status);
+            Motion motion = new Motion();
+            controller.MotionManager.AddPointToTrajectory(motion);
             if (status != null && status.StatusCode == SUCCESS)
                 this.IsConnected = true;
             else
@@ -172,16 +178,41 @@ namespace Yaskawa_Test
                 return false;
         }
 
-        internal void SetOverride(int @override)
+        //How Speed Override Works in Yaskawa Robots:
+        //According to the Yaskawa manual:
+        //The Speed Override function allows modifying the playback speed of a robot job.
+        //The override percentage is stored in specific parameters(S4C288 - S4C295) or controlled via external input signals.
+        //The Universal Input signals (1-8) define the speed override percentage.If all override signals are 0, the speed is determined directly from the input signal status.
+        //Parameter S2C701 must be set to 1 to enable external speed override control.
+        //The priority of signals follows this order: Signal 1 > Signal 8. The highest priority signal determines the override speed.
+        //
+        //Enable Speed Override via Parameters:
+        //Set S2C701 = 1 to enable external signal control.
+        //Set S4C287 to define the Universal Input group(1-512).(Here I have used 199)
+        //Configure S4C288 - S4C295 with speed values(1-255).
+        //If S4C288 - S4C295 = 0, the input signal directly determines the speed percentage.
+        //Confirm Override in the Robot Interface:
+        //Navigate to { SETUP} → {SPEED OVERRIDE SETTING} to verify override values.
+        //Ensure security mode allows modifications.
+        //
+        internal bool SetOverride(int @override)
         {
-            //throw new NotImplementedException();
+            IOByteData val = new IOByteData(Convert.ToByte(@override));
+            var status = controller.IO.WriteByte(IOType.GeneralInput, 199, val);
+            if (status != null && status.StatusCode == SUCCESS)
+                return true;
+            else
+                return false;
         }
 
         internal int GetOverride()
         {
-            var jd = new JobData();
-            var status2 = controller.Job.GetExecutingJobInformation(InformTaskNumber.Master, out jd);
-            return (int)jd.SpeedOverride;
+            byte val = Convert.ToByte(0);
+            var status = controller.IO.ReadByte(IOType.GeneralInput, 199, out val);
+            if (status != null && status.StatusCode == SUCCESS)
+                return Convert.ToInt32(val);
+            else
+                return 100;
         }
         internal ActiveAlarms? GetActiveAlarms()
         {

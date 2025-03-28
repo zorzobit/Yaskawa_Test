@@ -1,9 +1,12 @@
 ﻿
 using PropertyChanged;
+using System.Buffers;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Threading;
 using YMConnect;
 using static MaterialDesignThemes.Wpf.Theme.ToolBar;
 
@@ -45,11 +48,7 @@ namespace Yaskawa_Test
             figure.AxisAngles.SetValue(AxisAngle.LessThan180, 3);
             figure.AxisAngles.SetValue(AxisAngle.GreaterThanOrEqual180, 4);
             figure.AxisAngles.SetValue(AxisAngle.LessThan180, 5);
-            positionData.Figure = figure;
-            robotPosition.PositionData = positionData;
-            RegItem gsg= new RegItem();
-            gsg.RobotPosition = robotPosition;
-            var stt=robotPosition.ToString();
+            
         }
         bool overrideHold = false;
         private void OverrideSlider_MouseUp(object sender, MouseButtonEventArgs e)
@@ -201,7 +200,6 @@ namespace Yaskawa_Test
         public RegItem RegNum2 { get; set; }
         public RegItem RegReal1 { get; set; }
         public RegItem RegReal2 { get; set; }
-        public IntegerVariableData RegNum3 { get; set; }
 
         public RegItem PosReg1 { get; set; }
         public RegItem PosReg2 { get; set; }
@@ -252,6 +250,9 @@ namespace Yaskawa_Test
                 }, o => true);
             }
         }
+        private Brush _backgroundBrush = Brushes.White;
+        private DispatcherTimer _animationTimer;
+        public Brush BackgroundBrush { get; set; }
         public ICommand PosRegSetButton
         {
             get
@@ -281,18 +282,32 @@ namespace Yaskawa_Test
                 {
                     if (ConnectButtonContext == "Connect")
                     {
-                        yaskawa_interface.Connect(IPTextBox);
-                        if (yaskawa_interface.IsConnected)
+                        Task.Run(() =>
                         {
-                            DataCheck.RunWorkerAsync();
-                            ConnectButtonContext = "DisConnect";
-                            RegNum1 = new RegItem();
-                            RegNum2 = new RegItem();
-                            RegReal1 = new RegItem();
-                            RegReal2 = new RegItem();
-                            PosReg1 = new RegItem();
-                            PosReg2 = new RegItem();
-                        }
+                            OperationStatus = "Connecting...";
+                            BackgroundBrush = Brushes.Yellow;
+                            yaskawa_interface.Connect(IPTextBox);
+                            if (yaskawa_interface.IsConnected)
+                            {
+                                DataCheck.RunWorkerAsync();
+                                ConnectButtonContext = "DisConnect";
+                                RegNum1 = new RegItem();
+                                RegNum2 = new RegItem();
+                                RegReal1 = new RegItem();
+                                RegReal2 = new RegItem();
+                                PosReg1 = new RegItem();
+                                PosReg2 = new RegItem();
+                            }
+                            else
+                            {
+                                OperationStatus = "Connection failed";
+                                BackgroundBrush = Brushes.LightPink;
+                                Thread.Sleep(1500);
+                                BackgroundBrush = Brushes.White;
+                                OperationStatus = "No Connection";
+                            }
+                        });
+
                     }
                     else
                     {
