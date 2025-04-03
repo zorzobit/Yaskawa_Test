@@ -223,51 +223,60 @@ namespace Yaskawa_Test
                 return null;
         }
 
-        internal void ReadInputData(RegItem rDI1)
+        internal void ReadInputData(RegItem RegInput)
         {
-            IOByteData val = new IOByteData();
-            var status = controller?.IO?.ReadByte(IOType.GeneralInput, Convert.ToUInt16(rDI1.Num), out val);
-            if (status != null && status.StatusCode == SUCCESS)
+            if(RegInput == null && RegInput.Num != null)
             {
-                rDI1.Bit0 = val.Get(0);
-                rDI1.Bit1 = val.Get(1);
-                rDI1.Bit2 = val.Get(2);
-                rDI1.Bit3 = val.Get(3);
-                rDI1.Bit4 = val.Get(4);
-                rDI1.Bit5 = val.Get(5);
-                rDI1.Bit6 = val.Get(6);
-                rDI1.Bit7 = val.Get(7);
+                IOByteData val = new IOByteData();
+                var status = controller?.IO?.ReadByte(IOType.GeneralInput, Convert.ToUInt16(RegInput.Num), out val);
+                if (status != null && status.StatusCode == SUCCESS)
+                {
+                    RegInput.Bit0 = val.Get(0);
+                    RegInput.Bit1 = val.Get(1);
+                    RegInput.Bit2 = val.Get(2);
+                    RegInput.Bit3 = val.Get(3);
+                    RegInput.Bit4 = val.Get(4);
+                    RegInput.Bit5 = val.Get(5);
+                    RegInput.Bit6 = val.Get(6);
+                    RegInput.Bit7 = val.Get(7);
+                }
             }
         }
-        internal void ReadOutputData(RegItem rDI1)
+        internal void ReadOutputData(RegItem RegOutput)
         {
-            IOByteData val = new IOByteData();
-            var status = controller?.IO?.ReadByte(IOType.GeneralOutput, Convert.ToUInt16(rDI1.Num), out val);
-            if (status != null && status.StatusCode == SUCCESS)
+            if (RegOutput == null && RegOutput.Num != null)
             {
-                rDI1.Bit0 = val.Get(0);
-                rDI1.Bit1 = val.Get(1);
-                rDI1.Bit2 = val.Get(2);
-                rDI1.Bit3 = val.Get(3);
-                rDI1.Bit4 = val.Get(4);
-                rDI1.Bit5 = val.Get(5);
-                rDI1.Bit6 = val.Get(6);
-                rDI1.Bit7 = val.Get(7);
+                IOByteData val = new IOByteData();
+                var status = controller?.IO?.ReadByte(IOType.GeneralOutput, Convert.ToUInt16(RegOutput.Num), out val);
+                if (status != null && status.StatusCode == SUCCESS)
+                {
+                    RegOutput.Bit0 = val.Get(0);
+                    RegOutput.Bit1 = val.Get(1);
+                    RegOutput.Bit2 = val.Get(2);
+                    RegOutput.Bit3 = val.Get(3);
+                    RegOutput.Bit4 = val.Get(4);
+                    RegOutput.Bit5 = val.Get(5);
+                    RegOutput.Bit6 = val.Get(6);
+                    RegOutput.Bit7 = val.Get(7);
+                }
             }
         }
 
-        internal void WriteOutputData(RegItem rDO1)
+        internal void WriteOutputData(RegItem RegOutput)
         {
-            IOByteData val = new IOByteData();
-            val.Set(0, rDO1.Bit0);
-            val.Set(1, rDO1.Bit1);
-            val.Set(2, rDO1.Bit2);
-            val.Set(3, rDO1.Bit3);
-            val.Set(4, rDO1.Bit4);
-            val.Set(5, rDO1.Bit5);
-            val.Set(6, rDO1.Bit6);
-            val.Set(7, rDO1.Bit7);
-            var status = controller?.IO?.WriteByte(IOType.GeneralOutput, Convert.ToUInt16(rDO1.Num), val);
+            if (RegOutput == null && RegOutput.Num != null)
+            {
+                IOByteData val = new IOByteData();
+                val.Set(0, RegOutput.Bit0);
+                val.Set(1, RegOutput.Bit1);
+                val.Set(2, RegOutput.Bit2);
+                val.Set(3, RegOutput.Bit3);
+                val.Set(4, RegOutput.Bit4);
+                val.Set(5, RegOutput.Bit5);
+                val.Set(6, RegOutput.Bit6);
+                val.Set(7, RegOutput.Bit7);
+                var status = controller?.IO?.WriteByte(IOType.GeneralOutput, Convert.ToUInt16(RegOutput.Num), val);
+            }
         }
     }
 }
