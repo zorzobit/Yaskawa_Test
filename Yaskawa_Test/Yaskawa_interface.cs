@@ -194,20 +194,20 @@ namespace Yaskawa_Test
         //Navigate to { SETUP} → {SPEED OVERRIDE SETTING} to verify override values.
         //Ensure security mode allows modifications.
         //
-        internal bool SetOverride(int @override)
+        internal bool SetOverride(int @override, ushort group)
         {
             IOByteData val = new IOByteData(Convert.ToByte(@override));
-            var status = controller.IO.WriteByte(IOType.GeneralInput, 199, val);
+            var status = controller.IO.WriteByte(IOType.GeneralInput, group, val);
             if (status != null && status.StatusCode == SUCCESS)
                 return true;
             else
                 return false;
         }
 
-        internal int GetOverride()
+        internal int GetOverride(ushort group)
         {
             byte val = Convert.ToByte(0);
-            var status = controller.IO.ReadByte(IOType.GeneralInput, 199, out val);
+            var status = controller.IO.ReadByte(IOType.GeneralInput, group, out val);
             if (status != null && status.StatusCode == SUCCESS)
                 return Convert.ToInt32(val);
             else

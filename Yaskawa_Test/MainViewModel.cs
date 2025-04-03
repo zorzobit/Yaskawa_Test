@@ -54,7 +54,7 @@ namespace Yaskawa_Test
         private void OverrideSlider_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (yaskawa_interface.IsConnected)
-                yaskawa_interface.SetOverride(Override);
+                yaskawa_interface.SetOverride(Override, OverrideGroup);
             overrideHold = false;
         }
         private void OverrideSlider_MouseDown(object sender, MouseButtonEventArgs e)
@@ -114,7 +114,7 @@ namespace Yaskawa_Test
                 };
             }
             if (!overrideHold)
-                Override = yaskawa_interface.GetOverride();
+                Override = yaskawa_interface.GetOverride(OverrideGroup);
             try
             {
                 var alarms = yaskawa_interface.GetActiveAlarms();
@@ -205,6 +205,8 @@ namespace Yaskawa_Test
         public bool SetIOValuesEnabled { get; private set; }
         public bool SetIONamesEnabled { get; private set; } = true;
         public string SetIOButtonName { get; set; } = "SET";
+
+        public ushort OverrideGroup { get; set; } = 199;
 
 
         public string PosRegSetButtonName { get; set; } = "SET";
