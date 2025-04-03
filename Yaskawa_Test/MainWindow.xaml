@@ -39,39 +39,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!--<Style x:Key="CustomSliderStyle" TargetType="Slider">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Slider">
-                        <Grid>
-                            --><!-- Background Track --><!--
-                            <Border x:Name="TrackBackground" Height="6" CornerRadius="3" Background="#E5E5E5" VerticalAlignment="Center"/>
-
-                            --><!-- Active Track --><!--
-                            <Border x:Name="ActiveTrack" Height="6" CornerRadius="3" Background="#4CD964" VerticalAlignment="Center" Width="0"/>
-
-                            --><!-- Slider Thumb --><!--
-                            <Thumb x:Name="Thumb" Width="20" Height="20" Background="White" CornerRadius="10" 
-                           VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
-                                <Thumb.RenderTransform>
-                                    <TranslateTransform X="0"/>
-                                </Thumb.RenderTransform>
-                                <Thumb.Effect>
-                                    <DropShadowEffect Color="#888" BlurRadius="3" ShadowDepth="1.5"/>
-                                </Thumb.Effect>
-                            </Thumb>
-                        </Grid>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="Value" SourceName="Thumb">
-                                <Setter TargetName="ActiveTrack" Property="Width" 
-                                Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Value, Converter={StaticResource SliderValueToWidthConverter}}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -84,8 +51,8 @@
                 <RowDefinition Height="12"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -322,10 +289,12 @@
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Override:" HorizontalAlignment="Right"/>
-                <Slider Grid.Column="1" x:Name="OverrideSlider" Value="{Binding Override, UpdateSourceTrigger=PropertyChanged}" Maximum="255" Margin="5" MaxWidth="300"/>
+                <Label Content="Override IO Group:" HorizontalAlignment="Right"/>
+                <TextBox Grid.Column="1" Text="{Binding OverrideGroup}" MinWidth="50" VerticalAlignment="Top" Margin="5"/>
+                <Slider Grid.Column="2" x:Name="OverrideSlider" Value="{Binding Override, UpdateSourceTrigger=PropertyChanged}" Maximum="255" Margin="5" MaxWidth="300"/>
             </Grid>
             
             <Grid Grid.Row="5">
@@ -358,12 +327,11 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="12"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="12"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="12"/>
                     <ColumnDefinition Width="*"/>
@@ -416,8 +384,100 @@
                         </Grid>
                     </StackPanel>
                 </Border>
+                
             </Grid>
             <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border BorderBrush="Black" BorderThickness="1" Grid.Column="0">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="General Input"/>
+                            <!--<Button Content="{Binding RegRealSetButtonName}" Command="{Binding RegRealSetButton}" Width="50" Margin="5,0"/>-->
+                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding RDI1.Num, UpdateSourceTrigger=PropertyChanged}"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding RDI1.Bit0}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI1.Bit1}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI1.Bit2}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI1.Bit3}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI1.Bit4}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI1.Bit5}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI1.Bit6}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI1.Bit7}" Margin="2" IsEnabled="False"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding RDI2.Num, UpdateSourceTrigger=PropertyChanged}"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding RDI2.Bit0}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI2.Bit1}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI2.Bit2}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI2.Bit3}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI2.Bit4}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI2.Bit5}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI2.Bit6}" Margin="2" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding RDI2.Bit7}" Margin="2" IsEnabled="False"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Output"/>
+                            <Button Content="{Binding SetIOButtonName}" Command="{Binding SetIOValues}" Width="50" Margin="5,0"/>
+                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding RDO1.Num, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetIONamesEnabled}"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding RDO1.Bit0}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO1.Bit1}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO1.Bit2}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO1.Bit3}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO1.Bit4}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO1.Bit5}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO1.Bit6}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO1.Bit7}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding RDO2.Num, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SetIONamesEnabled}"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding RDO2.Bit0}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO2.Bit1}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO2.Bit2}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO2.Bit3}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO2.Bit4}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO2.Bit5}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO2.Bit6}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                                <CheckBox IsChecked="{Binding RDO2.Bit7}" Margin="2"  IsEnabled="{Binding SetIOValuesEnabled}"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <Grid Grid.Row="3">
                 <Border BorderBrush="Black" BorderThickness="1">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">

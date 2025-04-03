@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using YMConnect;
@@ -21,8 +22,6 @@ namespace Yaskawa_Test
         {
             StatusInfo status = new StatusInfo();
             controller = MotomanController.OpenConnection(ip, out status);
-            Motion motion = new Motion();
-            controller.MotionManager.AddPointToTrajectory(motion);
             if (status != null && status.StatusCode == SUCCESS)
                 this.IsConnected = true;
             else
@@ -222,6 +221,53 @@ namespace Yaskawa_Test
                 return activeAlarms;
             else
                 return null;
+        }
+
+        internal void ReadInputData(RegItem rDI1)
+        {
+            IOByteData val = new IOByteData();
+            var status = controller?.IO?.ReadByte(IOType.GeneralInput, Convert.ToUInt16(rDI1.Num), out val);
+            if (status != null && status.StatusCode == SUCCESS)
+            {
+                rDI1.Bit0 = val.Get(0);
+                rDI1.Bit1 = val.Get(1);
+                rDI1.Bit2 = val.Get(2);
+                rDI1.Bit3 = val.Get(3);
+                rDI1.Bit4 = val.Get(4);
+                rDI1.Bit5 = val.Get(5);
+                rDI1.Bit6 = val.Get(6);
+                rDI1.Bit7 = val.Get(7);
+            }
+        }
+        internal void ReadOutputData(RegItem rDI1)
+        {
+            IOByteData val = new IOByteData();
+            var status = controller?.IO?.ReadByte(IOType.GeneralOutput, Convert.ToUInt16(rDI1.Num), out val);
+            if (status != null && status.StatusCode == SUCCESS)
+            {
+                rDI1.Bit0 = val.Get(0);
+                rDI1.Bit1 = val.Get(1);
+                rDI1.Bit2 = val.Get(2);
+                rDI1.Bit3 = val.Get(3);
+                rDI1.Bit4 = val.Get(4);
+                rDI1.Bit5 = val.Get(5);
+                rDI1.Bit6 = val.Get(6);
+                rDI1.Bit7 = val.Get(7);
+            }
+        }
+
+        internal void WriteOutputData(RegItem rDO1)
+        {
+            IOByteData val = new IOByteData();
+            val.Set(0, rDO1.Bit0);
+            val.Set(1, rDO1.Bit1);
+            val.Set(2, rDO1.Bit2);
+            val.Set(3, rDO1.Bit3);
+            val.Set(4, rDO1.Bit4);
+            val.Set(5, rDO1.Bit5);
+            val.Set(6, rDO1.Bit6);
+            val.Set(7, rDO1.Bit7);
+            var status = controller?.IO?.WriteByte(IOType.GeneralOutput, Convert.ToUInt16(rDO1.Num), val);
         }
     }
 }

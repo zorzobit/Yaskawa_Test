@@ -176,6 +176,18 @@ namespace Yaskawa_Test
                     PosReg2.RobotPosition = yaskawa_interface.GetPR(ushort.Parse(PosReg2.Num)).Value;
                 }
             }
+            yaskawa_interface.ReadInputData(RDI1);
+            yaskawa_interface.ReadInputData(RDI2);
+            if (SetIOValuesEnabled)
+            {
+                yaskawa_interface.WriteOutputData(RDO1);
+                yaskawa_interface.WriteOutputData(RDO2);
+            }
+            else
+            {
+                yaskawa_interface.ReadOutputData(RDO1);
+                yaskawa_interface.ReadOutputData(RDO2);
+            }
         }
         public int Override { get; set; }
         public string ConnectButtonContext { get; set; } = "Connect";
@@ -190,6 +202,9 @@ namespace Yaskawa_Test
         public string RegRealSetButtonName { get; set; } = "SET";
         public bool SetRealValuesEnabled { get; private set; }
         public bool SetRealNamesEnabled { get; private set; } = true;
+        public bool SetIOValuesEnabled { get; private set; }
+        public bool SetIONamesEnabled { get; private set; } = true;
+        public string SetIOButtonName { get; set; } = "SET";
 
 
         public string PosRegSetButtonName { get; set; } = "SET";
@@ -203,6 +218,13 @@ namespace Yaskawa_Test
 
         public RegItem PosReg1 { get; set; }
         public RegItem PosReg2 { get; set; }
+
+        public RegItem RDI1 { get; set; }
+        public RegItem RDI2 { get; set; }
+        public RegItem RDO1 { get; set; }
+        public RegItem RDO2 { get; set; }
+
+
 
         public Pos PosJ { get; set; } = new Pos();
         public Pos PosW { get; set; } = new Pos();
@@ -246,6 +268,27 @@ namespace Yaskawa_Test
                         RegRealSetButtonName = "SET";
                         SetRealValuesEnabled = false;
                         SetRealNamesEnabled = true;
+                    }
+                }, o => true);
+            }
+        }
+        public ICommand SetIOValues
+        {
+            get
+            {
+                return new RelayCommand(o =>
+                {
+                    if (SetIOButtonName == "SET")
+                    {
+                        SetIOButtonName = "GET";
+                        SetIOValuesEnabled = true;
+                        SetIONamesEnabled = false;
+                    }
+                    else
+                    {
+                        SetIOButtonName = "SET";
+                        SetIOValuesEnabled = false;
+                        SetIONamesEnabled = true;
                     }
                 }, o => true);
             }
@@ -395,5 +438,15 @@ namespace Yaskawa_Test
             RobotPositionVariableData robotPosition = new RobotPositionVariableData();
             return robotPosition;
         }
+        public bool Bit0 { get; set; }
+        public bool Bit1 { get; set; }
+        public bool Bit2 { get; set; }
+        public bool Bit3 { get; set; }
+        public bool Bit4 { get; set; }
+        public bool Bit5 { get; set; }
+        public bool Bit6 { get; set; }
+        public bool Bit7 { get; set; }
+
+
     }
 }
