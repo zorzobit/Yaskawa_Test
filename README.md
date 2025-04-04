@@ -96,4 +96,4 @@ This project is open-source and available under the MIT License.
 
 - <a href="https://www.yaskawa.com" target="_blank">Yaskawa Electric Corporation</a> for their robot controllers.
 
-<i>This ReadMe created with ChatGPT</i>
+<i>This ReadMe has been created with ChatGPT</i>
