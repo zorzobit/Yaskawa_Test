@@ -225,7 +225,7 @@ namespace Yaskawa_Test
 
         internal void ReadInputData(RegItem RegInput)
         {
-            if(RegInput == null && RegInput.Num != null)
+            if(RegInput != null && RegInput.Num != null)
             {
                 IOByteData val = new IOByteData();
                 var status = controller?.IO?.ReadByte(IOType.GeneralInput, Convert.ToUInt16(RegInput.Num), out val);
@@ -244,7 +244,7 @@ namespace Yaskawa_Test
         }
         internal void ReadOutputData(RegItem RegOutput)
         {
-            if (RegOutput == null && RegOutput.Num != null)
+            if (RegOutput != null && RegOutput.Num != null)
             {
                 IOByteData val = new IOByteData();
                 var status = controller?.IO?.ReadByte(IOType.GeneralOutput, Convert.ToUInt16(RegOutput.Num), out val);
@@ -264,7 +264,7 @@ namespace Yaskawa_Test
 
         internal void WriteOutputData(RegItem RegOutput)
         {
-            if (RegOutput == null && RegOutput.Num != null)
+            if (RegOutput != null && RegOutput.Num != null)
             {
                 IOByteData val = new IOByteData();
                 val.Set(0, RegOutput.Bit0);

@@ -342,6 +342,10 @@ namespace Yaskawa_Test
                                 RegReal2 = new RegItem();
                                 PosReg1 = new RegItem();
                                 PosReg2 = new RegItem();
+                                RDO1 = new RegItem();
+                                RDO2 = new RegItem();
+                                RDI1 = new RegItem();
+                                RDI2 = new RegItem();
                             }
                             else
                             {
