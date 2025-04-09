@@ -197,7 +197,7 @@ namespace Yaskawa_Test
         internal bool SetOverride(int @override, ushort group)
         {
             IOByteData val = new IOByteData(Convert.ToByte(@override));
-            var status = controller.IO.WriteByte(IOType.GeneralInput, group, val);
+            var status = controller.IO.WriteByte(IOType.NetworkInput, group, val);
             if (status != null && status.StatusCode == SUCCESS)
                 return true;
             else
@@ -207,7 +207,7 @@ namespace Yaskawa_Test
         internal int GetOverride(ushort group)
         {
             byte val = Convert.ToByte(0);
-            var status = controller.IO.ReadByte(IOType.GeneralInput, group, out val);
+            var status = controller.IO.ReadByte(IOType.NetworkInput, group, out val);
             if (status != null && status.StatusCode == SUCCESS)
                 return Convert.ToInt32(val);
             else

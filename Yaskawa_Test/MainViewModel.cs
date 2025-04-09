@@ -206,7 +206,7 @@ namespace Yaskawa_Test
         public bool SetIONamesEnabled { get; private set; } = true;
         public string SetIOButtonName { get; set; } = "SET";
 
-        public ushort OverrideGroup { get; set; } = 199;
+        public ushort OverrideGroup { get; set; } = 1;
 
 
         public string PosRegSetButtonName { get; set; } = "SET";
